@@ -7,92 +7,67 @@
   <link rel="icon" href="favicon.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Theme variables */
     :root {
       --bg-gradient: linear-gradient(135deg, #ece9e6, #ffffff);
       --card-bg: rgba(255,255,255,0.3);
       --input-bg: rgba(255,255,255,0.6);
       --text-color: #333;
-      --detail-color: #444;
-      --meta-color: #666;
-      --date-color: #999;
-      --shadow-color: rgba(0,0,0,0.12);
       --income-light: rgba(67,233,123,0.2);
       --income-dark-color: #276b4a;
       --expense-light: rgba(255,106,106,0.2);
       --expense-dark-color: #a83333;
-      --btn-income-start: #43e97b;
-      --btn-income-end: #38f9d7;
-      --btn-expense-start: #ff6a6a;
-      --btn-expense-end: #ff8c8c;
     }
     [data-theme="dark"] {
       --bg-gradient: linear-gradient(135deg, #2c3e50, #4ca1af);
       --card-bg: rgba(20,20,20,0.5);
       --input-bg: rgba(40,40,40,0.6);
       --text-color: #eee;
-      --detail-color: #ddd;
-      --meta-color: #bbb;
-      --date-color: #999;
-      --shadow-color: rgba(0,0,0,0.4);
       --income-light: rgba(67,233,123,0.4);
       --income-dark-color: #2b5c3a;
       --expense-light: rgba(255,106,106,0.4);
       --expense-dark-color: #8c2a2a;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-gradient); transition: background 0.3s; }
-    .tracker { position: relative; width: 360px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 24px; padding: 2rem; box-shadow: 0 8px 32px var(--shadow-color); color: var(--text-color); transition: background 0.3s, color 0.3s; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .header h1 { font-size: 1.5rem; }
-    .theme-toggle { width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 1.2rem; color: var(--text-color); }
-    .input-group { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
-    .input-group textarea, .input-group input { width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 12px; background: var(--input-bg); backdrop-filter: blur(6px); font-size: 0.95rem; color: var(--text-color); }
-    .input-group textarea { height: 60px; resize: none; overflow-y: auto; }
-    .input-group textarea::-webkit-scrollbar { display: none; }
-    .input-group textarea { -ms-overflow-style: none; scrollbar-width: none; }
-    .toggle-group { display: flex; position: relative; background: var(--input-bg); backdrop-filter: blur(6px); border-radius: 12px; overflow: visible; }
-    .toggle-group button { flex: 1; padding: 0.75rem 0; margin-bottom: -4px; border: none; background: transparent; font-size: 0.95rem; cursor: pointer; color: var(--text-color); position: relative; z-index: 1; }
-    .toggle-group button:not(.active-income):not(.active-expense):hover { background: rgba(0,0,0,0.05); }
-    /* Indicator border-bottom on active */
-    .active-income, .active-expense {
-      border-bottom: 4px solid var(--text-color);
-      background-clip: padding-box;
-      z-index: 2;
-    }
-    .active-income { background: var(--income-light); color: var(--income-dark-color); }
-    .active-expense { background: var(--expense-light); color: var(--expense-dark-color); }
-    .btn-add { width: 100%; padding: 0.75rem; font-weight: 600; font-size: 0.95rem; color: #fff; border: none; border-radius: 12px; cursor: pointer; }
-    .btn-income { background: linear-gradient(135deg, var(--btn-income-start), var(--btn-income-end)); }
-    .btn-expense { background: linear-gradient(135deg, var(--btn-expense-start), var(--btn-expense-end)); }
-    .summary { display: flex; justify-content: space-evenly; margin: 1.5rem 0; font-weight: 600; }
-    .summary > div { flex: 1; text-align: center; }
-    .summary .expense { text-align: left; }
-    .summary .income { text-align: right; }
-    .transactions { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; -ms-overflow-style: none; scrollbar-width: none; }
-    .transactions::-webkit-scrollbar { display: none; }
-    .transaction { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); backdrop-filter: blur(6px); padding: 0.75rem 1rem; border-radius: 12px; }
-    .details { display: flex; flex-direction: column; gap: 0.25rem; }
-    .desc { color: var(--detail-color); }
-    .meta { font-size: 0.85rem; color: var(--meta-color); }
-    .date { font-size: 0.75rem; color: var(--date-color); }
-    .type { font-weight: 600; text-transform: uppercase; padding: 0.25rem 0.5rem; border-radius: 8px; font-size: 0.75rem; margin-right: 0.5rem; }
-    .transaction.income .type { background: rgba(37,117,252,0.15); color: #2575fc; }
-    .transaction.expense .type { background: rgba(237,85,101,0.15); color: #ed5565; }
-    .remove { background: #ff4e4e; border: none; border-radius: 8px; color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; cursor: pointer; }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Montserrat',sans-serif}
+    body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-gradient);transition:background .3s}
+    .tracker{width:360px;background:var(--card-bg);backdrop-filter:blur(12px);border-radius:24px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,.12);color:var(--text-color);transition:color .3s}
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .header h1{font-size:1.5rem}
+    .theme-toggle{width:32px;height:32px;border:none;background:none;cursor:pointer;font-size:1.2rem;color:var(--text-color)}
+    .input-group{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem}
+    .input-group textarea,.input-group input{width:100%;padding:.75rem 1rem;border:none;border-radius:12px;background:var(--input-bg);backdrop-filter:blur(6px);font-size:.95rem;color:var(--text-color)}
+    .input-group textarea{height:60px;resize:none;overflow:hidden}
+    .toggle-group{display:flex;position:relative;background:var(--input-bg);backdrop-filter:blur(6px);border-radius:12px;overflow:hidden}
+    .toggle-group button{flex:1;padding:.75rem 0;border:none;background:transparent;font-size:.95rem;color:var(--text-color);cursor:pointer;z-index:1}
+    .toggle-group .indicator{position:absolute;bottom:0;left:10%;width:30%;height:4px;background:var(--text-color);transition:left .3s}
+    .active-income{background:var(--income-light);color:var(--income-dark-color)}
+    .active-expense{background:var(--expense-light);color:var(--expense-dark-color)}
+    .btn-add{width:100%;padding:.75rem;font-weight:600;font-size:.95rem;color:#fff;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#43e97b,#38f9d7)}
+    .btn-expense-mode{background:linear-gradient(135deg,#ff6a6a,#ff8c8c)}
+    .summary{display:flex;justify-content:space-evenly;margin:1.5rem 0;font-weight:600}
+    .summary>div{flex:1}
+    .summary .expense{text-align:left}
+    .summary .balance{text-align:center}
+    .summary .income{text-align:right}
+    .transactions{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:.75rem;scrollbar-width:none;-ms-overflow-style:none}
+    .transactions::-webkit-scrollbar{display:none}
+    .transaction{display:flex;justify-content:space-between;align-items:center;background:var(--input-bg);backdrop-filter:blur(6px);padding:.75rem 1rem;border-radius:12px}
   </style>
 </head>
 <body>
   <div class="tracker">
-    <div class="header"><h1>Finance Tracker</h1><button class="theme-toggle" id="themeToggle">🌙</button></div>
+    <div class="header">
+      <h1>Finance Tracker</h1>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+    </div>
     <div class="input-group">
       <textarea id="desc" placeholder="Description"></textarea>
       <input type="number" id="amount" placeholder="Amount ₹" min="0">
       <div class="toggle-group">
-        <button id="incomeBtn" class="active-income">Income</button>
         <button id="expenseBtn">Expense</button>
+        <button id="incomeBtn" class="active-income">Income</button>
+        <div class="indicator"></div>
       </div>
-      <button class="btn-add btn-income" id="addBtn" onclick="addTransaction()">Add Transaction</button>
+      <button class="btn-add btn-income" id="addBtn">Add Transaction</button>
     </div>
     <div class="summary">
       <div class="expense">Expense: ₹<span id="total-expense">0.00</span></div>
@@ -102,24 +77,25 @@
     <div class="transactions" id="list"></div>
   </div>
   <script>
-    // Disable right-click & certain keys
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => { if(e.ctrlKey||e.metaKey){const blocked=['s','u','i','j','c']; if(blocked.includes(e.key.toLowerCase())) e.preventDefault();} if(['F12'].includes(e.key)) e.preventDefault(); });
-    /* Theme Toggle */
-    const themeToggle=document.getElementById('themeToggle'), root=document.documentElement;
-    function setTheme(theme){root.setAttribute('data-theme',theme);themeToggle.textContent=theme==='dark'?'☀️':'🌙';localStorage.setItem('theme',theme);}    
-    document.addEventListener('DOMContentLoaded',()=>{setTheme(localStorage.getItem('theme')||'light');setupToggle();updateSummary();renderTransactions();});
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey){const b=['s','u','i','j','c'];if(b.includes(e.key.toLowerCase()))e.preventDefault()}if(e.key==='F12')e.preventDefault()});
+    const themeToggle=document.getElementById('themeToggle'),root=document.documentElement;
+    function setTheme(t){root.setAttribute('data-theme',t);themeToggle.textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('theme',t)}
+    document.addEventListener('DOMContentLoaded',()=>{setTheme(localStorage.getItem('theme')||'light');init()});
     themeToggle.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='light'?'dark':'light'));
-    /* Transactions */
-    let transactions=JSON.parse(localStorage.getItem('transactions')||'[]'),currentType='income';
-    const incBtn=document.getElementById('incomeBtn'),expBtn=document.getElementById('expenseBtn'),addBtn=document.getElementById('addBtn');
-    function setupToggle(){incBtn.addEventListener('click',()=>setType('income'));expBtn.addEventListener('click',()=>setType('expense'));}
-    function setType(type){currentType=type;incBtn.classList.toggle('active-income',type==='income');expBtn.classList.toggle('active-expense',type==='expense');addBtn.classList.toggle('btn-income',type==='income');addBtn.classList.toggle('btn-expense',type==='expense');}
-    function saveTrans(){localStorage.setItem('transactions',JSON.stringify(transactions));}
-    function updateSummary(){const inc=transactions.filter(tx=>tx.type==='income').reduce((s,tx)=>s+tx.amount,0);const exp=transactions.filter(tx=>tx.type==='expense').reduce((s,tx)=>s+tx.amount,0);document.getElementById('total-income').textContent=inc.toFixed(2);document.getElementById('total-expense').textContent=exp.toFixed(2);document.getElementById('balance').textContent=(inc-exp).toFixed(2);}
-    function renderTransactions(){const list=document.getElementById('list');list.innerHTML='';transactions.slice().reverse().forEach((tx,i)=>{const el=document.createElement('div');el.className=`transaction ${tx.type}`;el.innerHTML=`<div class="details"><div class="desc">${tx.desc||'—'}<\/div><div class="meta">₹${tx.amount.toFixed(2)}<\/div><div class="date">${tx.date}<\/div><\/div><div style="display:flex;align-items:center;"><div class="type">${tx.type}<\/div><button class="remove" onclick=\`removeTransaction(${transactions.length-1-i})\`>×<\/button><\/div>`;list.appendChild(el);});}
-    function addTransaction(){const desc=document.getElementById('desc').value.trim();const amount=parseFloat(document.getElementById('amount').value);if(!amount||amount<=0)return alert('Enter a valid amount');const now=new Date();const date=`${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()}`;transactions.push({desc,amount,type:currentType,date});saveTrans();document.getElementById('desc').value='';document.getElementById('amount').value='';updateSummary();renderTransactions();}
-    function removeTransaction(i){transactions.splice(i,1);saveTrans();updateSummary();renderTransactions();}
+    let transactions=JSON.parse(localStorage.getItem('transactions')||'[]');
+    const incomeBtn=document.getElementById('incomeBtn'),expenseBtn=document.getElementById('expenseBtn'),indicator=document.querySelector('.indicator'),addBtn=document.getElementById('addBtn');
+    let currentType='income';
+    function init(){incomeBtn.addEventListener('click',()=>toggle('income'));expenseBtn.addEventListener('click',()=>toggle('expense'));addBtn.addEventListener('click',addTransaction);toggle('income');updateSummary();render()}
+    function toggle(type){currentType=type;incomeBtn.classList.toggle('active-income',type==='income');expenseBtn.classList.toggle('active-expense',type==='expense');
+      addBtn.classList.toggle('btn-expense-mode',type==='expense');
+      // center indicator under buttons: 10% for expense, 60% for income
+      indicator.style.left = type==='expense' ? '10%' : '60%';
+    }
+    function save(){localStorage.setItem('transactions',JSON.stringify(transactions))}
+    function updateSummary(){const inc=transactions.filter(t=>t.type==='income').reduce((a,b)=>a+b.amount,0),exp=transactions.filter(t=>t.type==='expense').reduce((a,b)=>a+b.amount,0);document.getElementById('total-income').textContent=inc.toFixed(2);document.getElementById('total-expense').textContent=exp.toFixed(2);document.getElementById('balance').textContent=(inc-exp).toFixed(2)}
+    function render(){const list=document.getElementById('list');list.innerHTML='';transactions.slice().reverse().forEach((t,i)=>{const el=document.createElement('div');el.className='transaction';el.innerHTML=`<div><div>${t.desc||'—'}</div><div>₹${t.amount.toFixed(2)}</div><div>${t.date}</div></div>`;list.appendChild(el)})}
+    function addTransaction(){const d=document.getElementById('desc').value.trim(),a=parseFloat(document.getElementById('amount').value);if(!a||a<=0)return alert('Enter a valid amount');const n=new Date(),date=`${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`;transactions.push({desc:d,amount:a,type:currentType,date});save();document.getElementById('desc').value='';document.getElementById('amount').value='';updateSummary();render()}
   </script>
 </body>
 </html>
