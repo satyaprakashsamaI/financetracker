@@ -28,7 +28,7 @@
       --expense-dark-color: #8c2a2a;
     }
     *{box-sizing:border-box;margin:0;padding:0;font-family:'Montserrat',sans-serif}
-    body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-gradient);transition:background .3s;overflow:hidden}
+    body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-gradient);transition:background .3s;}
     .tracker{width:360px;background:var(--card-bg);backdrop-filter:blur(12px);border-radius:24px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,.12);color:var(--text-color);transition:color .3s;position:relative;z-index:1}
     .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
     .header h1{font-size:1.5rem}
@@ -56,7 +56,7 @@
     .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:2}
     .modal{background:#ffffff; /* opaque backdrop for dialog */ color:#000000; padding:2rem; border-radius:16px; width:95%; max-width:400px;}
     .modal h2{margin-bottom:1rem;font-size:1.25rem;text-align:center}
-    [data-theme="dark"] .modal{background:#333333; color:#ffffff;}{margin-bottom:1rem;font-size:1.25rem;text-align:center}
+    [data-theme="dark"] .modal{background:#333333; color:#ffffff;}
     .modal textarea{width:100%;height:150px;padding:1rem;font-size:1rem;color:var(--text-color);background:#f0f0f0;border:none;border-radius:8px;resize:none;scrollbar-width:none;-ms-overflow-style:none;}
     .modal textarea::-webkit-scrollbar{display:none;}
     [data-theme="dark"] .modal textarea{background:rgba(255,255,255,0.1);}
@@ -64,6 +64,12 @@
     .modal button{padding:.75rem 1.25rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
     .btn-copy{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;}
     .btn-close{background:rgba(0,0,0,0.1);color:var(--text-color);}
+    /* Mobile styles */
+    @media (max-width: 480px) {
+      body{overflow:auto;}
+      .tracker{width:90%;max-width:360px;margin:1rem auto;}
+      .transactions{max-height:140px;overflow-y:auto;}
+    }
   </style>
 </head>
 <body>
