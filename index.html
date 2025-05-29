@@ -111,7 +111,6 @@
     </div>
   </div>
   <script>
-    document.addEventListener('contextmenu', e=> e.preventDefault());
     document.addEventListener('keydown', e=> { if (e.ctrlKey||e.metaKey){ const b=['s','u','i','j','c']; if(b.includes(e.key.toLowerCase())) e.preventDefault();} if(e.key==='F12') e.preventDefault();});
     const themeToggle=document.getElementById('themeToggle'), exportToggle=document.getElementById('exportToggle'), importToggle=document.getElementById('importToggle'), root=document.documentElement;
     const modalOverlay=document.getElementById('modalOverlay'), modalTitle=document.getElementById('modalTitle'), modalTextarea=document.getElementById('modalTextarea'), modalCopy=document.getElementById('modalCopy'), modalClose=document.getElementById('modalClose');
