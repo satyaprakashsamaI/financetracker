@@ -16,63 +16,86 @@
       --income-dark-color: #276b4a;
       --expense-light: rgba(255,106,106,0.2);
       --expense-dark-color: #a83333;
+      --badge-income-bg: rgba(67,233,123,0.6);
+      --badge-expense-bg: rgba(255,106,106,0.6);
+      --indicator-color: #000;
     }
     [data-theme="dark"] {
       --bg-gradient: linear-gradient(135deg, #2c3e50, #4ca1af);
       --card-bg: rgba(20,20,20,0.5);
       --input-bg: rgba(40,40,40,0.6);
-      --text-color: #eee;
+      --text-color: #fff;
       --income-light: rgba(67,233,123,0.4);
       --income-dark-color: #2b5c3a;
       --expense-light: rgba(255,106,106,0.4);
       --expense-dark-color: #8c2a2a;
+      --badge-income-bg: #39ff14;
+      --badge-expense-bg: #ff073a;
+      --indicator-color: #fff;
     }
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Montserrat',sans-serif}
-    body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-gradient);transition:background .3s;}
-    .tracker{width:360px;background:var(--card-bg);backdrop-filter:blur(12px);border-radius:24px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,.12);color:var(--text-color);transition:color .3s;position:relative;z-index:1}
-    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-    .header h1{font-size:1.5rem}
-    .header-controls{display:flex;align-items:center}
-    .header-controls button{width:32px;height:32px;border:none;background:none;cursor:pointer;font-size:1.2rem;color:var(--text-color);margin-left:12px}
-    .input-group{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem}
-    .input-group textarea,.input-group input{width:100%;padding:.75rem 1rem;border:none;border-radius:12px;background:var(--input-bg);backdrop-filter:blur(6px);font-size:.95rem;color:var(--text-color)}
-    .input-group textarea{height:60px;resize:none;overflow:hidden}
-    .toggle-group{display:flex;position:relative;background:var(--input-bg);backdrop-filter:blur(6px);border-radius:12px;overflow:hidden}
-    .toggle-group button{flex:1;padding:.75rem 0;border:none;background:transparent;font-size:.95rem;color:var(--text-color);cursor:pointer;z-index:1}
-    .toggle-group .indicator{position:absolute;bottom:0;left:10%;width:30%;height:4px;background:var(--text-color);transition:left .3s}
-    .active-income{background:var(--income-light);color:var(--income-dark-color)}
-    .active-expense{background:var(--expense-light);color:var(--expense-dark-color)}
-    .btn-add{width:100%;padding:.75rem;font-weight:600;font-size:.95rem;color:#fff;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#43e97b,#38f9d7)}
-    .btn-expense-mode{background:linear-gradient(135deg,#ff6a6a,#ff8c8c)}
-    .summary{display:flex;justify-content:space-evenly;margin:1.5rem 0;font-weight:600}
-    .summary>div{flex:1}
-    .summary .expense{text-align:left}
-    .summary .balance{text-align:center}
-    .summary .income{text-align:right}
-    .transactions{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:.75rem;scrollbar-width:none;-ms-overflow-style:none}
-    .transactions::-webkit-scrollbar{display:none}
-    .transaction{display:flex;justify-content:space-between;align-items:center;background:var(--input-bg);backdrop-filter:blur(6px);padding:.75rem 1rem;border-radius:12px}
-    /* custom modal */
-    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:2}
-    .modal{background:#ffffff; /* opaque backdrop for dialog */ color:#000000; padding:2rem; border-radius:16px; width:95%; max-width:400px;}
-    .modal h2{margin-bottom:1rem;font-size:1.25rem;text-align:center}
-    [data-theme="dark"] .modal{background:#333333; color:#ffffff;}
-    .modal textarea{width:100%;height:150px;padding:1rem;font-size:1rem;color:var(--text-color);background:#f0f0f0;border:none;border-radius:8px;resize:none;scrollbar-width:none;-ms-overflow-style:none;}
-    .modal textarea::-webkit-scrollbar{display:none;}
-    [data-theme="dark"] .modal textarea{background:rgba(255,255,255,0.1);}
-    .modal .actions{display:flex;justify-content:flex-end;gap:1rem;margin-top:1rem}
-    .modal button{padding:.75rem 1.25rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
-    .btn-copy{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;}
-    .btn-close{background:rgba(0,0,0,0.1);color:var(--text-color);}
-    /* Mobile styles */
-    @media (max-width: 480px) {
-      body{overflow:auto;}
-      .tracker{width:90%;max-width:360px;margin:1rem auto;}
-      .transactions{max-height:140px;overflow-y:auto;}
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-gradient); transition: background 0.3s; }
+    .tracker { width: 360px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 24px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.12); color: var(--text-color); }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .header h1 { font-size: 1.5rem; }
+    .header-controls { display: flex; }
+    .header-controls button { width: 32px; height: 32px; margin-left: 8px; border: none; background: none; cursor: pointer; font-size: 1.2rem; color: var(--text-color); }
+    .input-group { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .input-group textarea, .input-group input { width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 12px; background: var(--input-bg); backdrop-filter: blur(6px); font-size: 0.95rem; color: var(--text-color); }
+    .input-group textarea { height: 60px; resize: none; overflow: hidden; }
+    .toggle-group { display: flex; position: relative; background: var(--input-bg); backdrop-filter: blur(6px); border-radius: 12px; overflow: hidden; }
+    .toggle-group button { flex: 1; padding: 0.75rem 0; border: none; background: transparent; font-size: 0.95rem; color: var(--text-color); cursor: pointer; }
+    .toggle-group .indicator { position: absolute; bottom: 0; width: 30%; height: 4px; background: var(--indicator-color); transition: left 0.3s; }
+    .active-income { background: var(--income-light); color: var(--income-dark-color); }
+    .active-expense { background: var(--expense-light); color: var(--expense-dark-color); }
+    .btn-add { width: 100%; padding: 0.75rem; font-weight: 600; font-size: 0.95rem; color: #fff; border: none; border-radius: 12px; cursor: pointer; background: linear-gradient(135deg, #43e97b, #38f9d7); }
+    .btn-expense-mode { background: linear-gradient(135deg, #ff6a6a, #ff8c8c); }
+    .summary { display: flex; justify-content: space-evenly; margin: 1.5rem 0; font-weight: 600; }
+    .transactions { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; scrollbar-width: none; -ms-overflow-style: none; }
+    .transactions::-webkit-scrollbar { display: none; }
+    .transaction {
+      position: relative;
+      background: var(--input-bg);
+      backdrop-filter: blur(6px);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
     }
+    .remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: none;
+      background: #ff4e4e;
+      color: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 8px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .badge-income { color: var(--income-dark-color); background: var(--badge-income-bg); }
+    .badge-expense { color: var(--expense-dark-color); background: var(--badge-expense-bg); }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 2; }
+    .modal { background: #fff; padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; color: var(--text-color); }
+    [data-theme="dark"] .modal { background: #333; color: #fff; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    #pasteToggle { display: none; width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 1.2rem; color: var(--text-color); }
+    .modal textarea { width: 100%; height: 150px; padding: 1rem; font-size: 1rem; border: none; border-radius: 8px; resize: none; color: var(--text-color); background: var(--card-bg); }
+    .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
+    .actions button { padding: 0.75rem 1.25rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .btn-copy { background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; }
+    .btn-close { background: rgba(0,0,0,0.1); color: var(--text-color); }
+    [data-theme="dark"] .btn-close { background: #555; }
+    @media (max-width: 480px) { .tracker { width: 90%; } .transactions { max-height: 140px; } }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false">
   <div class="tracker">
     <div class="header">
       <h1>Finance Tracker</h1>
@@ -88,7 +111,7 @@
       <div class="toggle-group">
         <button id="expenseBtn">Expense</button>
         <button id="incomeBtn" class="active-income">Income</button>
-        <div class="indicator"></div>
+        <div class="indicator" style="left: 60%;"></div>
       </div>
       <button class="btn-add btn-income" id="addBtn">Add Transaction</button>
     </div>
@@ -99,11 +122,13 @@
     </div>
     <div class="transactions" id="list"></div>
   </div>
-  <!-- Modal for export/import -->
   <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modal">
-      <h2 id="modalTitle">Export Data</h2>
-      <textarea id="modalTextarea" readonly></textarea>
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitleText">Export Data</h2>
+        <button id="pasteToggle" title="Paste Clipboard">📋</button>
+      </div>
+      <textarea id="modalTextarea"></textarea>
       <div class="actions">
         <button class="btn-copy" id="modalCopy">Copy</button>
         <button class="btn-close" id="modalClose">Close</button>
@@ -111,23 +136,24 @@
     </div>
   </div>
   <script>
-    document.addEventListener('keydown', e=> { if (e.ctrlKey||e.metaKey){ const b=['s','u','i','j','c']; if(b.includes(e.key.toLowerCase())) e.preventDefault();} if(e.key==='F12') e.preventDefault();});
-    const themeToggle=document.getElementById('themeToggle'), exportToggle=document.getElementById('exportToggle'), importToggle=document.getElementById('importToggle'), root=document.documentElement;
-    const modalOverlay=document.getElementById('modalOverlay'), modalTitle=document.getElementById('modalTitle'), modalTextarea=document.getElementById('modalTextarea'), modalCopy=document.getElementById('modalCopy'), modalClose=document.getElementById('modalClose');
-    function setTheme(t){ root.setAttribute('data-theme',t); themeToggle.textContent=t==='dark'?'☀️':'🌙'; localStorage.setItem('theme',t);}    
-    document.addEventListener('DOMContentLoaded',()=>{ setTheme(localStorage.getItem('theme')||'light'); init(); });
-    themeToggle.addEventListener('click',()=> setTheme(root.getAttribute('data-theme')==='light'?'dark':'light'));
-    let transactions=JSON.parse(localStorage.getItem('transactions')||'[]'); let currentType='income';
-    const incomeBtn=document.getElementById('incomeBtn'), expenseBtn=document.getElementById('expenseBtn'), indicator=document.querySelector('.indicator'), addBtn=document.getElementById('addBtn');
-    function init(){ incomeBtn.addEventListener('click',()=>toggle('income')); expenseBtn.addEventListener('click',()=>toggle('expense')); addBtn.addEventListener('click',addTransaction); exportToggle.addEventListener('click',()=>openModal('export')); importToggle.addEventListener('click',()=>openModal('import')); toggle('income'); updateSummary(); render(); }
-    function toggle(type){ currentType=type; incomeBtn.classList.toggle('active-income',type==='income'); expenseBtn.classList.toggle('active-expense',type==='expense'); addBtn.classList.toggle('btn-expense-mode',type==='expense'); indicator.style.left = type==='expense'?'10%':'60%'; }
-    function save(){ localStorage.setItem('transactions',JSON.stringify(transactions)); }
-    function updateSummary(){ const inc=transactions.filter(t=>t.type==='income').reduce((a,b)=>a+b.amount,0), exp=transactions.filter(t=>t.type==='expense').reduce((a,b)=>a+b.amount,0); document.getElementById('total-income').textContent=inc.toFixed(2); document.getElementById('total-expense').textContent=exp.toFixed(2); document.getElementById('balance').textContent=(inc-exp).toFixed(2); }
-    function render(){ const list=document.getElementById('list'); list.innerHTML=''; transactions.slice().reverse().forEach(t=>{ const el=document.createElement('div'); el.className='transaction'; el.innerHTML=`<div><div>${t.desc||'—'}</div><div>₹${t.amount.toFixed(2)}</div><div>${t.date}</div></div>`; list.appendChild(el); }); }
-    function addTransaction(){ const d=document.getElementById('desc').value.trim(), a=parseFloat(document.getElementById('amount').value); if(!a||a<=0) return alert('Enter a valid amount'); const n=new Date(), date=`${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`; transactions.push({desc:d,amount:a,type:currentType,date}); save(); document.getElementById('desc').value=''; document.getElementById('amount').value=''; updateSummary(); render(); }
-    function openModal(mode){ if(mode==='export'){ modalTitle.textContent='Export Data'; modalTextarea.value=btoa(JSON.stringify(transactions)); modalTextarea.readOnly=true; modalCopy.textContent='Copy'; } else { modalTitle.textContent='Import Data'; modalTextarea.value=''; modalTextarea.readOnly=false; modalCopy.textContent='Import'; } modalOverlay.style.display='flex'; }
-    modalClose.addEventListener('click',()=> modalOverlay.style.display='none');
-    modalCopy.addEventListener('click',()=>{ if(modalTitle.textContent==='Export Data'){ modalTextarea.select(); document.execCommand('copy'); modalCopy.textContent='Copied'; } else { try{ const parsed=JSON.parse(atob(modalTextarea.value)); if(Array.isArray(parsed)){ transactions=parsed; save(); updateSummary(); render(); modalOverlay.style.display='none'; } else throw 1;}catch{ alert('Invalid data string!'); }} });
+    document.addEventListener('keydown', e => { if ((e.ctrlKey||e.metaKey)&&['s','u','i','j','c'].includes(e.key.toLowerCase())) e.preventDefault(); if(e.key==='F12') e.preventDefault(); });
+    const themeToggle=document.getElementById('themeToggle'), root=document.documentElement;
+    function setTheme(t){root.setAttribute('data-theme',t);themeToggle.textContent=t==='dark'?'☀️':'🌙';localStorage.setItem('theme',t);}
+    document.addEventListener('DOMContentLoaded',()=>{setTheme(localStorage.getItem('theme')||'light');init();});
+    themeToggle.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='light'?'dark':'light'));
+    let transactions=JSON.parse(localStorage.getItem('transactions')||'[]'),currentType='income';
+    const incBtn=document.getElementById('incomeBtn'),expBtn=document.getElementById('expenseBtn'),addBtn=document.getElementById('addBtn'),indicator=document.querySelector('.indicator');
+    function init(){incBtn.addEventListener('click',()=>toggle('income'));expBtn.addEventListener('click',()=>toggle('expense'));addBtn.addEventListener('click',addTransaction);document.getElementById('exportToggle').addEventListener('click',()=>openModal('export'));document.getElementById('importToggle').addEventListener('click',()=>openModal('import'));document.getElementById('pasteToggle').addEventListener('click',pasteClipboard);document.getElementById('modalCopy').addEventListener('click',modalAction);document.getElementById('modalClose').addEventListener('click',()=>document.getElementById('modalOverlay').style.display='none');toggle('income');updateSummary();render();}
+    function toggle(type){currentType=type;incBtn.classList.toggle('active-income',type==='income');expBtn.classList.toggle('active-expense',type==='expense');addBtn.classList.toggle('btn-expense-mode',type==='expense');indicator.style.left=type==='expense'?'10%':'60%';}
+    function save(){localStorage.setItem('transactions',JSON.stringify(transactions));}
+    function updateSummary(){const inc=transactions.filter(t=>t.type==='income').reduce((a,b)=>a+b.amount,0);const exp=transactions.filter(t=>t.type==='expense').reduce((a,b)=>a+b.amount,0);document.getElementById('total-income').textContent=inc.toFixed(2);document.getElementById('total-expense').textContent=exp.toFixed(2);document.getElementById('balance').textContent=(inc-exp).toFixed(2);}
+    function render(){const list=document.getElementById('list');list.innerHTML='';transactions.slice().reverse().forEach((t,i)=>{const idx=transactions.length-1-i;const el=document.createElement('div');el.className='transaction';el.innerHTML=`<div><div class="badge badge-${t.type}">${t.type.toUpperCase()}</div><div class="desc" style="font-weight:600">${t.desc||'—'}</div><div>₹${t.amount.toFixed(2)}</div><div>${t.date}</div></div><button class="remove" onclick="removeTransaction(${idx})">×</button>`;list.appendChild(el);});}
+    function addTransaction(){const d=document.getElementById('desc').value.trim(),a=parseFloat(document.getElementById('amount').value);if(!a||a<=0)return alert('Enter a valid amount');const n=new Date(),date=`${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`;transactions.push({desc:d,amount:a,type:currentType,date});save();document.getElementById('desc').value='';document.getElementById('amount').value='';updateSummary();render();}
+    function removeTransaction(i){transactions.splice(i,1);save();updateSummary();render();}
+    const modalOverlay=document.getElementById('modalOverlay'),modalTitleText=document.getElementById('modalTitleText'),modalTextarea=document.getElementById('modalTextarea');
+    function openModal(mode){document.getElementById('pasteToggle').style.display=mode==='import'?'inline-block':'none';if(mode==='export'){modalTitleText.textContent='Export Data';modalTextarea.value=btoa(JSON.stringify(transactions));modalTextarea.readOnly=true;document.getElementById('modalCopy').textContent='Copy';}else{modalTitleText.textContent='Import Data';modalTextarea.value='';modalTextarea.readOnly=false;document.getElementById('modalCopy').textContent='Import';}modalOverlay.style.display='flex';}
+    function modalAction(){if(modalTitleText.textContent==='Export Data'){modalTextarea.select();document.execCommand('copy');document.getElementById('modalCopy').textContent='Copied';}else{try{const p=JSON.parse(atob(modalTextarea.value));if(Array.isArray(p)){transactions=p;save();updateSummary();render();document.getElementById('modalOverlay').style.display='none';}else throw '';}catch{alert('Invalid string');}}}
+    async function pasteClipboard(){try{const text=await navigator.clipboard.readText();modalTextarea.readOnly=false;modalTextarea.value=text;}catch{alert('Clipboard access denied');}}
   </script>
 </body>
 </html>
