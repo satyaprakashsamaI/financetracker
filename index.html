@@ -50,18 +50,16 @@
     .active-expense { background: var(--expense-light); color: var(--expense-dark-color); }
     .btn-add { width: 100%; padding: 0.75rem; font-weight: 600; font-size: 0.95rem; color: #fff; border: none; border-radius: 12px; cursor: pointer; background: linear-gradient(135deg, #43e97b, #38f9d7); }
     .btn-expense-mode { background: linear-gradient(135deg, #ff6a6a, #ff8c8c); }
-
     .summary { display: flex; justify-content: space-between; margin: 1.5rem 0; font-weight: 600; }
     .summary > div { flex: 1; }
     .expense { text-align: left; }
     .balance { text-align: center; }
     .income { text-align: right; }
-
     .transactions { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; scrollbar-width: none; -ms-overflow-style: none; }
     .transactions::-webkit-scrollbar { display: none; }
-    .transaction { position: relative; background: var(--input-bg); backdrop-filter: blur(6px); padding: 0.75rem 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .remove { background: #ff4e4e; border: none; color: #fff; border-radius: 6px; width: 24px; height: 24px; cursor: pointer; }
-    .badge { padding: 0.2rem 0.5rem; border-radius: 8px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .transaction { position: relative; background: var(--input-bg); backdrop-filter: blur(6px); padding: 0.75rem 1rem; padding-right: 2.5rem; border-radius: 12px; display: flex; flex-direction: column; }
+    .remove { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; background: #ff4e4e; border: none; color: #fff; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .badge { display: inline-block; width: 70px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.2rem 0; border-radius: 8px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem; }
     .badge-income { background: var(--badge-income-bg); color: var(--income-dark-color); }
     .badge-expense { background: var(--badge-expense-bg); color: var(--expense-dark-color); }
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 2; }
@@ -92,7 +90,7 @@
       <div class="toggle-group">
         <button id="expenseBtn">Expense</button>
         <button id="incomeBtn" class="active-income">Income</button>
-        <div class="indicator" style="left:60%; height:4px;"></div>
+        <div class="indicator" style="left: 60%;"></div>
       </div>
       <button class="btn-add btn-income" id="addBtn">Add Transaction</button>
     </div>
@@ -117,37 +115,92 @@
     </div>
   </div>
   <script>
-    document.addEventListener('keydown', e => { if ((e.ctrlKey||e.metaKey)&&['s','u','i','j','c'].includes(e.key.toLowerCase())) e.preventDefault(); if(e.key==='F12') e.preventDefault(); });
-    const root=document.documentElement, themeToggle=document.getElementById('themeToggle');
-    function setTheme(theme){ root.setAttribute('data-theme',theme); themeToggle.textContent = theme==='dark'? '☀️':'🌙'; localStorage.setItem('theme',theme);}    
-    document.addEventListener('DOMContentLoaded',()=>{ setTheme(localStorage.getItem('theme')||'light'); init(); });
-    themeToggle.addEventListener('click',()=> setTheme(root.getAttribute('data-theme')==='light'?'dark':'light'));
-    let transactions = JSON.parse(localStorage.getItem('transactions')||'[]'), currentType='income';
-    const descEl=document.getElementById('desc'), amtEl=document.getElementById('amount'),
-          incBtn=document.getElementById('incomeBtn'), expBtn=document.getElementById('expenseBtn'), addBtn=document.getElementById('addBtn'), indicator=document.querySelector('.indicator');
-    const exportToggle=document.getElementById('exportToggle'), importToggle=document.getElementById('importToggle');
-    const modalOverlay=document.getElementById('modalOverlay'), modalTitle=document.getElementById('modalTitleText'), modalTextarea=document.getElementById('modalTextarea'), modalCopy=document.getElementById('modalCopy'), modalClose=document.getElementById('modalClose'), pasteToggle=document.getElementById('pasteToggle');
-    function init(){ incBtn.addEventListener('click',()=>toggleType('income')); expBtn.addEventListener('click',()=>toggleType('expense')); addBtn.addEventListener('click',addTransaction);
-      exportToggle.addEventListener('click',()=>openModal('export')); importToggle.addEventListener('click',()=>openModal('import')); pasteToggle.addEventListener('click',pasteClipboard);
-      modalCopy.addEventListener('click',modalCopyAction); modalClose.addEventListener('click',()=> modalOverlay.style.display='none');
-      render(); }
-    function toggleType(type){ currentType=type; incBtn.classList.toggle('active-income',type==='income'); expBtn.classList.toggle('active-expense',type==='expense'); addBtn.classList.toggle('btn-expense-mode',type==='expense'); indicator.style.left= type==='expense'? '10%':'60%'; }
-    function addTransaction(){ const desc=descEl.value.trim(), amt=parseFloat(amtEl.value); if(!desc||isNaN(amt)||amt<=0) return; const date=new Date(), dateStr=`${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
-      transactions.push({desc, amount:amt, type:currentType, date:dateStr}); save(); descEl.value=''; amtEl.value=''; render(); }
-    function save(){ localStorage.setItem('transactions', JSON.stringify(transactions)); }
-    function render(){ const list=document.getElementById('list'); list.innerHTML=''; let incSum=0, expSum=0;
-      transactions.slice().reverse().forEach((t,i)=>{
-        const el=document.createElement('div'); el.className='transaction'; el.innerHTML=`<div><span class="badge badge-${t.type}">${t.type.toUpperCase()}</span><div class="desc">${t.desc}</div><div>₹${t.amount.toFixed(2)}</div><div>${t.date}</div></div>`;
-        const rmv=document.createElement('button'); rmv.className='remove'; rmv.textContent='×'; rmv.onclick=()=>{transactions.splice(transactions.length-1-i,1); save(); render();}; el.appendChild(rmv); list.appendChild(el);
-        t.type==='income'? incSum+=t.amount: expSum+=t.amount;
-      }); document.getElementById('total-income').textContent=incSum.toFixed(2); document.getElementById('total-expense').textContent=expSum.toFixed(2); document.getElementById('balance').textContent=(incSum-expSum).toFixed(2);
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && ['s','u','i','j','c'].includes(e.key.toLowerCase())) e.preventDefault();
+      if (e.key === 'F12') e.preventDefault();
+    });
+    const themeToggle = document.getElementById('themeToggle'), root = document.documentElement;
+    function setTheme(t) {
+      root.setAttribute('data-theme', t);
+      themeToggle.textContent = t === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('theme', t);
     }
-    function openModal(mode){ if(mode==='export'){ modalTitle.textContent='Export Data'; modalTextarea.value=btoa(JSON.stringify(transactions)); modalTextarea.readOnly=true; modalCopy.textContent='Copy'; pasteToggle.style.display='none'; }
-      else{ modalTitle.textContent='Import Data'; modalTextarea.value=''; modalTextarea.readOnly=false; modalCopy.textContent='Import'; pasteToggle.style.display='inline-block'; }
-      modalOverlay.style.display='flex'; }
-    function modalCopyAction(){ if(modalTitle.textContent==='Export Data'){ modalTextarea.select(); document.execCommand('copy'); modalCopy.textContent='Copied'; }
-      else{ try{const data=JSON.parse(atob(modalTextarea.value)); if(Array.isArray(data)){transactions=data; save(); render(); modalOverlay.style.display='none';} else throw ''; }catch{ alert('Invalid data'); } }}
-    async function pasteClipboard(){ try{ modalTextarea.value=await navigator.clipboard.readText(); }catch{ alert('Clipboard denied'); } }
+    document.addEventListener('DOMContentLoaded', () => {
+      setTheme(localStorage.getItem('theme') || 'light');
+      init();
+    });
+    themeToggle.addEventListener('click', () => setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light'));
+    let transactions = JSON.parse(localStorage.getItem('transactions') || '[]'), currentType = 'income';
+    const descEl = document.getElementById('desc'), amtEl = document.getElementById('amount'), incBtn = document.getElementById('incomeBtn'), expBtn = document.getElementById('expenseBtn'), addBtn = document.getElementById('addBtn'), indicator = document.querySelector('.indicator');
+    const exportBtn = document.getElementById('exportToggle'), importBtn = document.getElementById('importToggle');
+    const modalOverlay = document.getElementById('modalOverlay'), modalTitle = document.getElementById('modalTitleText'), modalTextarea = document.getElementById('modalTextarea'), modalCopyBtn = document.getElementById('modalCopy'), modalCloseBtn = document.getElementById('modalClose'), pasteBtn = document.getElementById('pasteToggle');
+    function init() {
+      incBtn.addEventListener('click', () => toggleType('income'));
+      expBtn.addEventListener('click', () => toggleType('expense'));
+      addBtn.addEventListener('click', addTransaction);
+      exportBtn.addEventListener('click', () => openModal('export'));
+      importBtn.addEventListener('click', () => openModal('import'));
+      pasteBtn.addEventListener('click', pasteClipboard);
+      modalCopyBtn.addEventListener('click', modalCopyAction);
+      modalCloseBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
+      render();
+    }
+    function toggleType(type) {
+      currentType = type;
+      incBtn.classList.toggle('active-income', type === 'income');
+      expBtn.classList.toggle('active-expense', type === 'expense');
+      addBtn.classList.toggle('btn-expense-mode', type === 'expense');
+      indicator.style.left = type === 'income' ? '60%' : '10%';
+    }
+    function addTransaction() {
+      const d = descEl.value.trim(), a = parseFloat(amtEl.value);
+      if (!d || isNaN(a) || a <= 0) return;
+      const now = new Date(), dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()}`;
+      transactions.push({ desc: d, amount: a, type: currentType, date: dateStr });
+      save(); descEl.value = ''; amtEl.value = '';
+      render();
+    }
+    function save() { localStorage.setItem('transactions', JSON.stringify(transactions)); }
+    function render() {
+      const list = document.getElementById('list'); list.innerHTML = '';
+      let incSum = 0, expSum = 0;
+      transactions.slice().reverse().forEach((t, i) => {
+        const el = document.createElement('div'); el.className = 'transaction';
+        el.innerHTML = `<span class="badge badge-${t.type}">${t.type.toUpperCase()}</span><div class="desc">${t.desc}</div><div>₹${t.amount.toFixed(2)}</div><div>${t.date}</div>`;
+        const rmv = document.createElement('button'); rmv.className = 'remove'; rmv.textContent = '×';
+        rmv.onclick = () => { transactions.splice(transactions.length-1-i, 1); save(); render(); };
+        el.appendChild(rmv); list.appendChild(el);
+        if (t.type === 'income') incSum += t.amount; else expSum += t.amount;
+      });
+      document.getElementById('total-income').textContent = incSum.toFixed(2);
+      document.getElementById('total-expense').textContent = expSum.toFixed(2);
+      document.getElementById('balance').textContent = (incSum - expSum).toFixed(2);
+    }
+    function openModal(mode) {
+      if (mode === 'export') {
+        modalTitle.textContent = 'Export Data';
+        modalTextarea.value = btoa(JSON.stringify(transactions)); modalTextarea.readOnly = true;
+        modalCopyBtn.textContent = 'Copy'; pasteBtn.style.display = 'none';
+      } else {
+        modalTitle.textContent = 'Import Data'; modalTextarea.value = ''; modalTextarea.readOnly = false;
+        modalCopyBtn.textContent = 'Import'; pasteBtn.style.display = 'inline-block';
+      }
+      modalOverlay.style.display = 'flex';
+    }
+    function modalCopyAction() {
+      if (modalTitle.textContent === 'Export Data') {
+        modalTextarea.select(); document.execCommand('copy'); modalCopyBtn.textContent = 'Copied';
+      } else {
+        try {
+          const data = JSON.parse(atob(modalTextarea.value));
+          if (!Array.isArray(data)) throw '';
+          transactions = data; save(); render(); modalOverlay.style.display = 'none';
+        } catch { alert('Invalid data'); }
+      }
+    }
+    async function pasteClipboard() {
+      try { modalTextarea.value = await navigator.clipboard.readText(); } catch { alert('Clipboard access denied'); }
+    }
   </script>
 </body>
 </html>
