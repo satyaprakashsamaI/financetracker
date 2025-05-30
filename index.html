@@ -58,6 +58,7 @@
     .transactions { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; scrollbar-width: none; -ms-overflow-style: none; }
     .transactions::-webkit-scrollbar { display: none; }
     .transaction { position: relative; background: var(--input-bg); backdrop-filter: blur(6px); padding: 0.75rem 1rem; padding-right: 2.5rem; border-radius: 12px; display: flex; flex-direction: column; }
+    .transaction .desc { font-weight: 600; }
     .remove { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; background: #ff4e4e; border: none; color: #fff; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .badge { display: inline-block; width: 70px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0.2rem 0; border-radius: 8px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem; }
     .badge-income { background: var(--badge-income-bg); color: var(--income-dark-color); }
@@ -71,6 +72,9 @@
     .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
     .btn-copy { background: linear-gradient(135deg, #2563eb, #3b82f6); border: none; color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; cursor: pointer; }
     .btn-close { background: rgba(0,0,0,0.1); border: none; color: var(--text-color); padding: 0.75rem 1.25rem; border-radius: 8px; cursor: pointer; }
+    /* Custom overrides based on requests */
+    [data-theme="light"] .modal textarea { background: #cccccc; }
+    [data-theme="dark"] .btn-close { background: #888888; }
     @media (max-width: 480px) { .tracker { width: 90%; } .transactions { max-height: 140px; } }
   </style>
 </head>
